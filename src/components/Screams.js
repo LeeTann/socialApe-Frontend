@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import dayjs, { locale } from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
 import withStyles from '@material-ui/core/styles/withStyles'
 
 import Card from '@material-ui/core/Card';
@@ -15,23 +18,25 @@ const styles = {
     }, 
     image: {
         minWidth: 200,
-        width: 200,
-        height: 200
+        backgroundPosition: 'top ',
     },
     content: {
         padding: 25,
-    }
+    },
 }
 
 export class Screams extends Component {
     render() {
+
+        dayjs.extend(relativeTime)
         const { classes, scream: {body, createAt, userImage, userHandle, screamId, likeCount, commentCount} } = this.props
+
         return (
             <Card className={classes.card}>
                 <CardMedia image={userImage} title="Profile image" className={classes.image} />
                 <CardContent className={classes.content}>
                     <Typography variant="h5" component={Link} to={`/users/${userHandle}`} color="primary" >{userHandle}</Typography>
-                    <Typography variant="body2" color="textSecondary" >{createAt}</Typography>
+                    <Typography variant="body2" color="textSecondary" >{dayjs(createAt).to(dayjs('Feb 1, 2020 8:00 PM'))}</Typography>
                     <Typography variant="body1" >{body}</Typography>
                 </CardContent>
             </Card>
