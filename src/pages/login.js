@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import AppIcon from '../images/monkey-icon.png'
 import axios from 'axios'
@@ -38,109 +38,90 @@ const styles = {
     }
 }
 
-export class Login extends Component {
-    constructor() {
-        super()
-        this.state = {
-            email: '',
-            password: '',
-            loading: false,
-            errors: {}
-        }
-    }
+export const Login = props => {
 
-    handleSubmit = (event) => {
+    const [userData, setUserData] = useState({email: '', password: ''})
+    const [loading, setLoading] = useState(false)
+    const [errors, setErrors] = useState({})
+ 
+
+    const handleSubmit = (event) => {
         // preventDefault - so page doesn't reload
         event.preventDefault()
-        this.setState({
-            loading: true
-        })
-        const userData = {
-            email: this.state.email,
-            password: this.state.password
-        }
+        setLoading(false)
+        
         axios.post('/login', userData)
             .then(res => {
                 console.log(res.data)
-                this.setState({
-                    loading: false
-                })
+                setLoading(false)
                 // props.history.push - redirects back to homepage
-                this.props.history.push('/')
+                props.history.push('/')
             })
             .catch(err => {
-                this.setState({
-                    errors: err.response.data,
-                    loading: false
-
-                })
+                setErrors(err.response.data)
+                setLoading(false)
             })
     }
 
-    handleChange = (event) => {
-        this.setState({
-            [event.target.name]: event.target.value
-        })
+    const handleChange = (event) => {
+        setUserData({...userData, [event.target.name]: event.target.value})
     }
 
-    render() {
-        const { classes } = this.props
-        const { errors, loading } = this.state
-        return (
-            <Grid container className={classes.form}>
-                <Grid item sm />
-                <Grid item sm>
-                    <img src={AppIcon} alt="monkey icon" className={classes.image} />
-                    <Typography variant="h2" className={classes.page1}>Login</Typography>
-                    <form noValidate onSubmit={this.handleSubmit}>
-                        <TextField 
-                            id="email" 
-                            name="email" 
-                            type="email" 
-                            label="Email" 
-                            className={classes.textField}
-                            helperText={errors.email}
-                            error={errors.email ? true : false}
-                            value={this.state.email}
-                            onChange={this.handleChange} 
-                            fullWidth
-                        />
-                        <TextField 
-                            id="password" 
-                            name="password" 
-                            type="password" 
-                            label="Password" 
-                            className={classes.textField}
-                            helperText={errors.password}
-                            error={errors.password ? true : false}
-                            value={this.state.password}
-                            onChange={this.handleChange} 
-                            fullWidth
-                        />
-                        {/* checks if general error exist - display general error */}
-                        {errors.general && <Typography variant="body2" className={classes.customError}>{errors.general}</Typography>}
 
-                        <Button 
-                            type="submit" 
-                            variant="contained" 
-                            color="primary" 
-                            className={classes.button}
-                            disabled={loading}
-                        >
-                            Login
-                            {/* if loading - display CircularProgress spinner */}
-                            {loading && <CircularProgress size={30} color="secondary" className={classes.progress} />}
-                        </Button>
+    const { classes } = props
 
-                        <br />
+    return (
+        <Grid container className={classes.form}>
+            <Grid item sm />
+            <Grid item sm>
+                <img src={AppIcon} alt="monkey icon" className={classes.image} />
+                <Typography variant="h2" className={classes.page1}>Login</Typography>
+                <form noValidate onSubmit={handleSubmit}>
+                    <TextField 
+                        id="email" 
+                        name="email" 
+                        type="email" 
+                        label="Email" 
+                        className={classes.textField}
+                        helperText={errors.email}
+                        error={errors.email ? true : false}        
+                        onChange={handleChange} 
+                        fullWidth
+                    />
+                    <TextField 
+                        id="password" 
+                        name="password" 
+                        type="password" 
+                        label="Password" 
+                        className={classes.textField}
+                        helperText={errors.password}
+                        error={errors.password ? true : false}             
+                        onChange={handleChange} 
+                        fullWidth
+                    />
+                    {/* checks if general error exist - display general error */}
+                    {errors.general && <Typography variant="body2" className={classes.customError}>{errors.general}</Typography>}
 
-                        <small>Don't have an account? Sign up <Link to="/signup">here</Link></small>
-                    </form>
-                </Grid>
-                <Grid item sm />
+                    <Button 
+                        type="submit" 
+                        variant="contained" 
+                        color="primary" 
+                        className={classes.button}
+                        disabled={loading}
+                    >
+                        Login
+                        {/* if loading - display CircularProgress spinner */}
+                        {loading && <CircularProgress size={30} color="secondary" className={classes.progress} />}
+                    </Button>
+
+                    <br />
+
+                    <small>Don't have an account? Sign up <Link to="/signup">here</Link></small>
+                </form>
             </Grid>
-        )
-    }
+            <Grid item sm />
+        </Grid>
+    )
 }
 
 export default withStyles(styles)(Login)
