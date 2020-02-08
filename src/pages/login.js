@@ -38,7 +38,7 @@ const styles = {
     }
 }
 
-export const Login = props => {
+const Login = props => {
 
     const [userData, setUserData] = useState({email: '', password: ''})
     const [loading, setLoading] = useState(false)
@@ -53,6 +53,7 @@ export const Login = props => {
         axios.post('/login', userData)
             .then(res => {
                 console.log(res.data)
+                localStorage.setItem('FBToken', `Bearer ${res.data.token}`)
                 setLoading(false)
                 // props.history.push - redirects back to homepage
                 props.history.push('/')
