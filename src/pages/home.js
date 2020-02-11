@@ -4,7 +4,7 @@ import Screams from '../components/Screams'
 
 import { Grid } from '@material-ui/core'
 
-export const Home = props => {
+const Home = props => {
 
     const [screams, setScreams] = useState(null)
 

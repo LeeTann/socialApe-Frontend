@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import dayjs, { locale } from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -25,23 +25,21 @@ const styles = {
     },
 }
 
-export class Screams extends Component {
-    render() {
+const Screams = props => {
 
-        dayjs.extend(relativeTime)
-        const { classes, scream: {body, createAt, userImage, userHandle, screamId, likeCount, commentCount} } = this.props
+    dayjs.extend(relativeTime)
+    const { classes, scream: {body, createAt, userImage, userHandle, screamId, likeCount, commentCount} } = props
 
-        return (
-            <Card className={classes.card}>
-                <CardMedia image={userImage} title="Profile image" className={classes.image} />
-                <CardContent className={classes.content}>
-                    <Typography variant="h5" component={Link} to={`/users/${userHandle}`} color="primary" >{userHandle}</Typography>
-                    <Typography variant="body2" color="textSecondary" >{dayjs(createAt).to(dayjs('Feb 1, 2020 8:00 PM'))}</Typography>
-                    <Typography variant="body1" >{body}</Typography>
-                </CardContent>
-            </Card>
-        )
-    }
+    return (
+        <Card className={classes.card}>
+            <CardMedia image={userImage} title="Profile image" className={classes.image} />
+            <CardContent className={classes.content}>
+                <Typography variant="h5" component={Link} to={`/users/${userHandle}`} color="primary" >{userHandle}</Typography>
+                <Typography variant="body2" color="textSecondary" >{dayjs(createAt).to(dayjs('Feb 1, 2020 8:00 PM'))}</Typography>
+                <Typography variant="body1" >{body}</Typography>
+            </CardContent>
+        </Card>
+    )
 }
 
 export default withStyles(styles)(Screams)

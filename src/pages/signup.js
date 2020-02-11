@@ -38,7 +38,7 @@ const styles = {
     }
 }
 
-export const Signup = props => {
+const Signup = props => {
 
     const [userData, setUserData] = useState({email: '', password: '', confirmpassword: '', handle: ''})
     const [loading, setLoading] = useState(false)

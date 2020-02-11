@@ -39,8 +39,8 @@ if (token) {
 class App extends Component {
   render() {
       return (
-        <MuiThemeProvider theme={myTheme}>
-          <Provider store={store}>
+        <Provider store={store}>
+          <MuiThemeProvider theme={myTheme}>       
             <div className="App">
               <Router>
                 <Navbar />
@@ -52,10 +52,9 @@ class App extends Component {
                   </Switch>
                 </div>           
               </Router>
-            </div>
-          </Provider>
-          
-        </MuiThemeProvider>
+            </div>       
+          </MuiThemeProvider>
+        </Provider>
       )
   }
 }
