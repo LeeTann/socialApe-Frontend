@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import AppIcon from '../images/monkey-icon.png'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
 
 // MUI Stuff
@@ -10,6 +9,11 @@ import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { Button } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress'
+
+// Redux stuff
+import { connect } from 'react-redux'
+import { signupUser } from '../redux/actions/userActions'
+
 
 const styles = {
     form: {
@@ -41,27 +45,33 @@ const styles = {
 const Signup = props => {
 
     const [userData, setUserData] = useState({email: '', password: '', confirmpassword: '', handle: ''})
-    const [loading, setLoading] = useState(false)
+    // const [loading, setLoading] = useState(false)
     const [errors, setErrors] = useState({})
+
+    useEffect(() => {
+        if (props.UI.errors) {
+            setErrors(props.UI.errors)
+        }
+    }, [errors, props])
  
 
     const handleSubmit = (event) => {
         // preventDefault - so page doesn't reload
         event.preventDefault()
-        setLoading(false)
+        props.signupUser(userData, props.history)
         
-        axios.post('/signup', userData)
-            .then(res => {
-                console.log(res.data)
-                localStorage.setItem('FBToken', `Bearer ${res.data.token}`)
-                setLoading(false)
-                // props.history.push - redirects back to homepage
-                props.history.push('/')
-            })
-            .catch(err => {
-                setErrors(err.response.data)
-                setLoading(false)
-            })
+        // axios.post('/signup', userData)
+        //     .then(res => {
+        //         console.log(res.data)
+        //         localStorage.setItem('FBToken', `Bearer ${res.data.token}`)
+        //         setLoading(false)
+        //         // props.history.push - redirects back to homepage
+        //         props.history.push('/')
+        //     })
+        //     .catch(err => {
+        //         setErrors(err.response.data)
+        //         setLoading(false)
+            // })
     }
 
     const handleChange = (event) => {
@@ -130,11 +140,11 @@ const Signup = props => {
                         variant="contained" 
                         color="primary" 
                         className={classes.button}
-                        disabled={loading}
+                        disabled={props.UI.loading}
                     >
                         Signup
                         {/* if loading - display CircularProgress spinner */}
-                        {loading && <CircularProgress size={30} color="secondary" className={classes.progress} />}
+                        {props.UI.loading && <CircularProgress size={30} color="secondary" className={classes.progress} />}
                     </Button>
 
                     <br />
@@ -147,4 +157,9 @@ const Signup = props => {
     )
 }
 
-export default withStyles(styles)(Signup)
+const mapStateToProps = (state) => ({
+    user: state.user,
+    UI: state.UI
+})
+
+export default connect(mapStateToProps, { signupUser })(withStyles(styles)(Signup))
