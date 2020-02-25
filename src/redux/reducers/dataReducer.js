@@ -17,7 +17,7 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 screams: action.payload,
-                laoding: false
+                loading: false
             }
         case SET_SCREAM:
             return {
