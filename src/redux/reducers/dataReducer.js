@@ -1,4 +1,13 @@
-import { LOADING_DATA, SET_SCREAMS, LIKE_SCREAM, UNLIKE_SCREAM, POST_SCREAM, SET_SCREAM, SUBMIT_COMMENT, DELETE_SCREAM} from '../types'
+import { 
+    LOADING_DATA, 
+    SET_SCREAMS, 
+    LIKE_SCREAM, 
+    UNLIKE_SCREAM, 
+    POST_SCREAM, 
+    SET_SCREAM, 
+    DELETE_SCREAM,
+    SUBMIT_COMMENT 
+} from '../types'
 
 const initialState = {
     screams: [],
