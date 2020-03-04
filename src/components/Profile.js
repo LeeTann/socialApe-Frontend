@@ -2,18 +2,24 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import dayjs from 'dayjs'
 
+// Redux 
 import { connect } from 'react-redux'
+import { logoutUser, uploadImage } from '../redux/actions/userActions'
 
+// MUI stuff
 import withStyles from '@material-ui/core/styles/withStyles'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import MuiLink from '@material-ui/core/Link'
 import Paper from '@material-ui/core/Paper'
+import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
 
-//Icons
+//MUI Icons
 import LocationOn from '@material-ui/icons/LocationOn'
 import LinkIcon from '@material-ui/icons/Link'
 import CalendarToday from '@material-ui/icons/CalendarToday'
+import EditIcon from '@material-ui/icons/Edit'
 
 
 const styles = (theme) => ({
@@ -65,6 +71,21 @@ const styles = (theme) => ({
   })
 
 class Profile extends Component {
+
+  // targets the first file and allow us to upload a new image
+    handleImageChange = (event) => {
+        const image = event.target.files[0]
+        const formData = new FormData()
+        formData.append('image', image, image.name)
+        this.props.uploadImage(formData)
+    }
+    
+    // opens up the fileInput to select an image on click
+    handleEditPicture = () => {
+        const fileInput = document.getElementById('imageInput')
+        fileInput.click()
+    }
+
     render() {
         const {
             classes,
@@ -75,11 +96,19 @@ class Profile extends Component {
             }
         } = this.props
         
+        // if it's not loading check if authenticated
         let profileMarkup = !loading ? (authenticated ? (
+            // if authenticated - display profile section
             <Paper className={classes.paper}>
                 <div className={classes.profile}>
                     <div className="image-wrapper">
                         <img src={imageUrl} alt="profile" className="profile-image" />
+                        <input type="file" id="imageInput" hidden="hidden" onChange={this.handleImageChange} />
+                        <Tooltip title="Edit profile picture" placement="top">
+                            <IconButton onClick={this.handleEditPicture} className="button">
+                                <EditIcon color="primary"/>
+                            </IconButton>
+                        </Tooltip>
                     </div>
                     <hr/>
                     <div className="profile-details">
@@ -108,6 +137,7 @@ class Profile extends Component {
                 </div>
             </Paper>
         ) : (
+            // else we are not authenticated - display "No profile found, please login again"
             <Paper className={classes.paper}>
                 <Typography variant="body2" align="center">
                     No profile found, please login again
@@ -124,6 +154,7 @@ class Profile extends Component {
 
                 </div>
             </Paper>
+        // else display "loading..."
         )) : (<p>loading...</p>)
 
         return profileMarkup
@@ -134,4 +165,6 @@ const mapStateToProps = (state) => ({
     user: state.user
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(Profile))
+const mapActionToProps = { logoutUser, uploadImage }
+
+export default connect(mapStateToProps, mapActionToProps)(withStyles(styles)(Profile))
