@@ -1,4 +1,5 @@
-import React, { Component, Fragment} from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
+import MyButton from '../../utils/MyButton'
 
 // Redux
 import { connect } from 'react-redux'
@@ -12,8 +13,6 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import ToolTip from '@material-ui/core/Tooltip'
-import IconButton from '@material-ui/core/IconButton'
 
 // MUI icons
 import EditIcon from '@material-ui/icons/Edit'
@@ -25,111 +24,103 @@ const styles = (theme) => ({
     }
 })
 
-class EditDetails extends Component {
-    state = {
-        bio: '',
-        website: '',
-        location: '',
-        open: false
-    }
+const EditDetails = (props) => {
+    const [userData, setUserData] = useState({bio: '', website: '', location: ''})
+    const [open, setOpen] = useState(false)
 
-    mapUserDetailsToState = (credentials) => {
-        this.setState({
+    useEffect(() => {
+        const { credentials } = props
+        mapUserDetailsToState(credentials)
+    }, [props])
+
+    const mapUserDetailsToState = (credentials) => {
+        setUserData({
             bio: credentials.bio ? credentials.bio : '',
             website: credentials.website ? credentials.website : '',
             location: credentials.location ? credentials.location : ''
         })
     }
 
-    handleOpen = () => {
-        this.setState({ open: true })
-        this.mapUserDetailsToState(this.props.credentials)
+    const handleOpen = () => {
+        setOpen(true)
+        mapUserDetailsToState(props.credentials)
     }
 
-    handleClose = () => {
-        this.setState({ open: false })
-    }
-    
-    componentDidMount() {
-        const { credentials } = this.props
-        this.mapUserDetailsToState(credentials)
+    const handleClose = () => {
+        setOpen(false)
     }
 
-    handleChange = (event) => {
-        this.setState({
-            [event.target.name]: event.target.value
+    const handleChange = (event) => {
+        setUserData({
+            ...userData, [event.target.name]: event.target.value
         })
     }
 
-    handleSubmit = () => {
+    const handleSubmit = () => {
         const userDetails = {
-            bio: this.state.bio,
-            website: this.state.website,
-            location: this.state.location
+            bio: userData.bio,
+            website: userData.website,
+            location: userData.location
         }
-        this.props.editUserDetails(userDetails)
-        this.handleClose()
+        props.editUserDetails(userDetails)
+        handleClose()
     }
 
-    render() {
-        const { classes } = this.props
-        return (
-            <Fragment>
-                <ToolTip title="Edit details" placement="right">
-                    <IconButton onClick={this.handleOpen} className={classes.button}>
-                        <EditIcon color="primary" />
-                    </IconButton>
-                </ToolTip>
-                <Dialog open={this.state.open} onClose={this.handleClose} fullWidth maxWidth="sm">
-                    <DialogTitle>Edit your details</DialogTitle>
-                    <DialogContent>
-                        <form>
-                            <TextField 
-                                name="bio"
-                                type="text"
-                                label="Bio"
-                                multiline
-                                rows="3"
-                                placeholder="A short bio about yourself"
-                                className={classes.textField}
-                                value={this.state.bio}
-                                onChange={this.handleChange}
-                                fullWidth
-                            />
-                            <TextField 
-                                name="website"
-                                type="text"
-                                label="Website"
-                                placeholder="Your personal/professional website"
-                                className={classes.textField}
-                                value={this.state.website}
-                                onChange={this.handleChange}
-                                fullWidth
-                            />
-                            <TextField 
-                                name="location"
-                                type="text"
-                                label="Location"
-                                placeholder="Where you live"
-                                className={classes.textField}
-                                value={this.state.location}
-                                onChange={this.handleChange}
-                                fullWidth
-                            />
-                        </form>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleClose} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={this.handleSubmit} color="primary">
-                            Save
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </Fragment>
-        )
-    }
+    const { classes } = props
+    return (
+        <Fragment>
+            <MyButton tip="Edit details" onClick={handleOpen} btnClassName={classes.button}>
+                <EditIcon color="primary" />
+            </MyButton>
+            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+                <DialogTitle>Edit your details</DialogTitle>
+                <DialogContent>
+                    <form>
+                        <TextField 
+                            name="bio"
+                            type="text"
+                            label="Bio"
+                            multiline
+                            rows="3"
+                            placeholder="A short bio about yourself"
+                            className={classes.textField}
+                            value={userData.bio}
+                            onChange={handleChange}
+                            fullWidth
+                        />
+                        <TextField 
+                            name="website"
+                            type="text"
+                            label="Website"
+                            placeholder="Your personal/professional website"
+                            className={classes.textField}
+                            value={userData.website}
+                            onChange={handleChange}
+                            fullWidth
+                        />
+                        <TextField 
+                            name="location"
+                            type="text"
+                            label="Location"
+                            placeholder="Where you live"
+                            className={classes.textField}
+                            value={userData.location}
+                            onChange={handleChange}
+                            fullWidth
+                        />
+                    </form>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleSubmit} color="primary">
+                        Save
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Fragment>
+    )
 }
 
 const mapStateToProps = (state) => ({
