@@ -11,8 +11,8 @@ import { SET_AUTHENTICATED } from './redux/types'
 import { logoutUser, getUserData, loginUser } from './redux/actions/userActions'
 
 //MUI
-import { MuiThemeProvider } from '@material-ui/core/styles'
-import { createMuiTheme } from '@material-ui/core/styles'
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme'
 
 // Components
 import Navbar from './components/Navbar'
@@ -27,7 +27,7 @@ import axios from 'axios'
 
 axios.defaults.baseURL = 'https://us-central1-socialape-3e674.cloudfunctions.net/api'
 
-const myTheme = createMuiTheme(themeFile)
+const theme = createMuiTheme(themeFile)
 
 const token = localStorage.FBToken
 if (token) {
@@ -45,8 +45,8 @@ if (token) {
 class App extends Component {
   render() {
       return (
-        <Provider store={store}>
-          <MuiThemeProvider theme={myTheme}>       
+        <MuiThemeProvider theme={theme}>    
+          <Provider store={store}> 
             <div className="App">
               <Router>
                 <Navbar />
@@ -59,8 +59,8 @@ class App extends Component {
                 </div>           
               </Router>
             </div>       
-          </MuiThemeProvider>
-        </Provider>
+          </Provider>
+        </MuiThemeProvider>
       )
   }
 }

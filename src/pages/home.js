@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
 import Screams from '../components/Screams'
-import Profile from '../components/Profile'
+import Profile from '../components/profile/Profile'
 
 import { Grid } from '@material-ui/core'
 
