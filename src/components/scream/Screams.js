@@ -1,9 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import dayjs, { locale } from 'dayjs'
+import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import MyButton from '../../utils/MyButton'
-import LikeButton from '../scream/LikeButton'
+import LikeButton from './LikeButton'
+import DeleteScream from './DeleteScream'
 
 // MUI Stuff
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -40,16 +41,18 @@ const Screams = props => {
     const { 
         classes, 
         scream: {body, createAt, userImage, userHandle, screamId, likeCount, commentCount},
-        user: { authenticated }
+        user: {authenticated, credentials: {handle}}
     } = props
     
+    const deleteButton = authenticated && userHandle === handle ? <DeleteScream screamId={screamId} /> : null
 
     return (
         <Card className={classes.card}>
             <CardMedia image={userImage} title="Profile image" className={classes.image} />
             <CardContent className={classes.content}>
                 <Typography variant="h5" component={Link} to={`/users/${userHandle}`} color="primary" >{userHandle}</Typography>
-                <Typography variant="body2" color="textSecondary" >{dayjs(createAt).to(dayjs('Feb 1, 2020 8:00 PM'))}</Typography>
+                {deleteButton}
+                <Typography variant="body2" color="textSecondary" >{dayjs(createAt).fromNow()}</Typography>
                 <Typography variant="body1" >{body}</Typography>
                 <LikeButton screamId={screamId} />
                 <span>{likeCount} Likes</span>
