@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import MyButton from '../utils/MyButton'
+import PostScream from './scream/PostScream'
 
 // MUI Stuff
 import AppBar from '@material-ui/core/AppBar'
@@ -10,7 +11,6 @@ import Button from '@material-ui/core/Button'
 
 // MUI Icon
 import HomeIcon from '@material-ui/icons/Home'
-import AddIcon from '@material-ui/icons/Add'
 import Notifications from '@material-ui/icons/Notifications'
 
 const Navbar = (props) => {
@@ -19,10 +19,8 @@ const Navbar = (props) => {
         <AppBar>
             <Toolbar className="nav-container">
                 {authenticated ? (
-                    <Fragment>
-                        <MyButton tip="Post a Scream!">
-                            <AddIcon />
-                        </MyButton>
+                    <Fragment>            
+                        <PostScream />
                         <Link to="/">
                             <MyButton tip="Home">
                                 <HomeIcon />

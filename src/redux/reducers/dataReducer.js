@@ -34,7 +34,7 @@ export default function(state = initialState, action) {
                 scream: action.payload
             }
         case LIKE_SCREAM:
-        case UNLIKE_SCREAM:
+        case UNLIKE_SCREAM: {
             let index = state.screams.findIndex((scream) => (
                 scream.screamId === action.payload.screamId
             ))
@@ -42,8 +42,7 @@ export default function(state = initialState, action) {
             if (state.scream.screamId === action.payload.screamId) {
                 state.scream = action.payload
             }
-            return {
-                ...state
+            return {...state}
             }
         case DELETE_SCREAM:
             return {
