@@ -72,7 +72,7 @@ export const postScream = (newScream) => (dispatch) => {
 
 // Like a scream
 export const likeScream = (screamId) => (dispatch) => {
-    axios.get(`/scream/${screamId}/like`)
+    axios.get(`/scream/${screamId}/like`, {headers: { Authorization: localStorage.getItem("FBIdToken") }})
         .then(res => {
             dispatch({
                 type: LIKE_SCREAM,
@@ -84,7 +84,7 @@ export const likeScream = (screamId) => (dispatch) => {
 
 // Unlike a scream
 export const unlikeScream = (screamId) => (dispatch) => {
-    axios.get(`/scream/${screamId}/unlike`)
+    axios.get(`/scream/${screamId}/unlike`, {headers: { Authorization: localStorage.getItem("FBIdToken") }})
         .then(res => {
             dispatch({
                 type: UNLIKE_SCREAM,

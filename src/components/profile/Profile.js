@@ -43,7 +43,7 @@ const Profile = (props) => {
         fileInput.click()
     }
 
-    const handleLogout = (props) => {
+    const handleLogout = () => {
       props.logoutUser()
     }
 

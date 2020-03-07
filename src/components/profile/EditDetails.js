@@ -29,6 +29,7 @@ const EditDetails = (props) => {
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
+        console.log("props",props)
         const { credentials } = props
         mapUserDetailsToState(credentials)
     }, [props])
