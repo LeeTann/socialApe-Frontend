@@ -35,37 +35,45 @@ const styles = (theme) => ({
 })
 
 const PostScream = (props) => {
-    const [body, setBody] = useState('')
-    const [open, setOpen] = useState(false)
-    const [errors, setErrors] = useState({})
+    const [userData, setUserData] = useState({body:'', open: false, errors: {}})
+    // const [body, setBody] = useState('')
+    // const [open, setOpen] = useState(false)
+    // const [errors, setErrors] = useState({})
 
     useEffect(() => {
         console.log("props......", props)
         if (props.UI.errors) {
-            setErrors(props.UI.errors)
+            setUserData(props.UI.errors)
         }
-    }, [errors, props])
+    }, [props])
+
+    useEffect(() => {
+        if (!props.UI.errors && !props.UI.loading) {
+            setUserData({body:'', open: false, errors: {}})
+        }
+    }, [props.UI.errors, props.UI.loading])
+
 
     const handleOpen = () => {
-        setOpen(true)
+        setUserData({ open: true })
     }
 
     const handleClose = () => {
         props.clearErrors()
-        setOpen(false)
-        setErrors({})
+        setUserData({body:'', open: false, errors: {}})
     }
 
     const handleChange = (event) => {
-        setBody({
-            ...body, [event.target.name]: event.target.value
+        setUserData({
+            ...userData, [event.target.name]: event.target.value
         })
     }
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        props.postScream(setBody(props.body))   
+        props.postScream({ body: userData.body })   
     }
+   
 
     const { classes, UI: {loading}} = props
     return (
@@ -73,7 +81,7 @@ const PostScream = (props) => {
             <MyButton onClick={handleOpen} tip="Post a scream!">
                 <AddIcon />
             </MyButton>
-            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+            <Dialog open={userData.open} onClose={handleClose} fullWidth maxWidth="sm">
                 <MyButton onClick={handleClose} tip="Close" tipClassName={classes.closeButton}>
                     <CloseIcon />
                 </MyButton>
@@ -87,8 +95,8 @@ const PostScream = (props) => {
                             multiline
                             row="3"
                             placeholder="Scream at your fellow apes"
-                            error={errors.body ? true : false}
-                            helperText={errors.body}
+                            error={userData.body ? true: false}
+                            helperText={userData.body}
                             className={classes.TextField}
                             onChange={handleChange}
                             fullWidth
